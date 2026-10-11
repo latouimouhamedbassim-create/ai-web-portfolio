@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Live Demo | AI Agent Toolkit</title>
+  <style>
+    :root { --bg:#0b1020; --card:#0f1530; --text:#e6e9f5; --muted:#98a2c3; --accent:#7c83ff; --ok:#34d399; }
+    @media (prefers-color-scheme: light) { :root { --bg:#f7f8fc; --card:#151a33; } }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; }
+    main { width:100%; max-width:820px; padding:16px; display:flex; flex-direction:column; gap:12px; }
+    header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+    h1 { font-size:1.2rem; margin:0; }
+    a { color:var(--accent); text-decoration:none; }
+    .note { background:#f59e0b22; border:1px solid #f59e0b; color:#b7791f; padding:8px 12px; border-radius:10px; font-size:.85rem; }
+    .task { background:var(--card); color:#e6e9f5; border-radius:12px; padding:12px 14px; font-size:.95rem; }
+    pre { background:#080c1c; color:#d7ddf5; border-radius:12px; padding:16px; margin:0; min-height:260px; overflow-x:auto; font:13px/1.6 ui-monospace, Menlo, Consolas, monospace; white-space:pre-wrap; }
+    .step { color:var(--accent); } .ok { color:var(--ok); } .dim { color:#7a85ad; }
+    button { align-self:flex-start; padding:10px 18px; border:0; border-radius:12px; background:var(--accent); color:#fff; font-size:1rem; cursor:pointer; }
+    button:disabled { opacity:.5; }
+  </style>
+</head>
+<body>
+<main>
+  <header><h1>AI Agent Toolkit: live demo</h1><a href="../index.html">&larr; Back to portfolio</a></header>
+  <div class="note">Demo mode: this replays a real run of <code>python agent.py --demo</code> (scripted "model", real tools: calculator, write_file, list_files). No AI model is called. Source: <a href="https://github.com/latouimouhamedbassim-create/ai-agent-toolkit">ai-agent-toolkit</a>.</div>
+  <div class="task"><strong>Task:</strong> What is 15% of 2,480? Save the result in result.txt, then list my files.</div>
+  <button id="run">Run agent</button>
+  <pre id="out" aria-live="polite"><span class="dim">Press "Run agent" to replay the run...</span></pre>
+</main>
+<script>
+  const LINES = [
+    ['dim',  '[demo mode] scripted model, real tools - no API key used\n'],
+    ['step', "[step 1] calculator({'expression': '2480 * 0.15'}) -> 372.0"],
+    ['step', "[step 2] write_file({'filename': 'result.txt', 'content': '15% of 2480 = 372.0'}) -> Wrote 19 characters to result.txt"],
+    ['step', "[step 3] list_files({}) -> result.txt"],
+    ['',     '\nFinal answer:'],
+    ['ok',   '15% of 2,480 is 372. I saved the result in result.txt (workspace now contains: result.txt).'],
+  ];
+  const out = document.getElementById("out"), btn = document.getElementById("run");
+  btn.addEventListener("click", async () => {
+    btn.disabled = true; out.innerHTML = "";
+    for (const [cls, text] of LINES) {
+      const span = document.createElement("span"); span.className = cls; out.appendChild(span);
+      span.textContent = text + "\n";
+      await new Promise(r => setTimeout(r, 900));
+    }
+    btn.disabled = false; btn.textContent = "Run again";
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Live Demo | AI Chatbot Assistant</title>
+  <style>
+    :root { --bg:#0b1020; --card:#141b33; --me:#6366f1; --bot:#232c4d; --text:#e6e9f5; --muted:#98a2c3; }
+    @media (prefers-color-scheme: light) { :root { --bg:#f7f8fc; --card:#fff; --bot:#e9ecf8; --text:#151a33; --muted:#5b6488; } }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; min-height:100vh; }
+    main { width:100%; max-width:720px; display:flex; flex-direction:column; padding:16px; gap:12px; }
+    header { display:flex; justify-content:space-between; align-items:center; }
+    h1 { font-size:1.2rem; margin:0; }
+    a { color:var(--me); text-decoration:none; }
+    .note { background:#f59e0b22; border:1px solid #f59e0b; color:#b7791f; padding:8px 12px; border-radius:10px; font-size:.85rem; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; }
+    .chips button { padding:6px 12px; font-size:.85rem; border-radius:12px; border:1px solid var(--bot); background:var(--card); color:var(--text); cursor:pointer; }
+    #log { background:var(--card); border-radius:16px; padding:16px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; min-height:50vh; max-height:65vh; }
+    .msg { padding:10px 14px; border-radius:14px; max-width:85%; line-height:1.5; }
+    .me { align-self:flex-end; background:var(--me); color:#fff; }
+    .bot { align-self:flex-start; background:var(--bot); }
+    form { display:flex; gap:8px; }
+    input { flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--bot); background:var(--card); color:var(--text); font-size:1rem; }
+    form button { padding:12px 18px; border:0; border-radius:12px; background:var(--me); color:#fff; cursor:pointer; font-size:1rem; }
+    form button:disabled { opacity:.5; }
+  </style>
+</head>
+<body>
+<main>
+  <header><h1>AI Chatbot Assistant: live demo</h1><a href="../index.html">&larr; Back to portfolio</a></header>
+  <div class="note">Demo mode: scripted replies for a fictional print shop ("Nova Print"). No AI model is called here. The real app uses the Claude API, see the <a href="https://github.com/latouimouhamedbassim-create/ai-chatbot-assistant">source code</a>.</div>
+  <div class="chips" id="chips">
+    <button>How much are business cards?</button><button>What are your opening hours?</button>
+    <button>Do you deliver?</button><button>Do you do gold foil?</button>
+  </div>
+  <div id="log" aria-live="polite"></div>
+  <form id="form"><input id="input" placeholder="Type your message..." autocomplete="off" required><button id="send">Send</button></form>
+</main>
+<script>
+  const RULES = [
+    [["price","cost","how much","quote","prix","tarif"], "Happy to help with pricing! At Nova Print, 100 full-color business cards start at $12, flyers (A5, 250 pcs) at $34, and large-format banners at $9 per sq. ft. Tell me the product, quantity and size and I'll prepare an exact quote."],
+    [["hour","open","close","horaire","ouvert"], "We're open Sunday to Thursday, 8:30 to 17:30, and Saturday 9:00 to 13:00. We're closed on Fridays."],
+    [["deliver","shipping","ship","livraison"], "Yes, we deliver! Local orders arrive within 24-48 hours, and national shipping takes 3-5 business days. Delivery is free for orders above $80."],
+    [["gold","foil","emboss","dorure"], "Hot-foil stamping and embossing are available on cards, invitations and packaging. Gold, silver and colored foils are in stock. Production usually takes 3 working days."],
+    [["hello","hi","hey","bonjour","salam","salut"], "Hello! I'm the Nova Print assistant. I can help with prices, opening hours, delivery and special finishes. What do you need today?"],
+  ];
+  const FALLBACK = "Thanks for your message! This is a demo assistant, so I only know a few topics: prices, opening hours, delivery and hot-foil finishes. In a real deployment I'd answer from your own business knowledge base.";
+  const reply = (m) => { m = m.toLowerCase(); for (const [k, r] of RULES) if (k.some(x => m.includes(x))) return r; return FALLBACK; };
+
+  const log = document.getElementById("log"), form = document.getElementById("form"),
+        input = document.getElementById("input"), send = document.getElementById("send");
+  const add = (role, text) => { const el = document.createElement("div"); el.className = "msg " + role; el.textContent = text; log.appendChild(el); log.scrollTop = log.scrollHeight; return el; };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const msg = input.value.trim(); if (!msg) return;
+    input.value = ""; send.disabled = true; add("me", msg);
+    const bubble = add("bot", "");
+    for (const word of reply(msg).match(/\S+\s*/g)) {   // stream word by word like a real model
+      bubble.textContent += word; log.scrollTop = log.scrollHeight;
+      await new Promise(r => setTimeout(r, 30));
+    }
+    send.disabled = false; input.focus();
+  });
+  document.querySelectorAll("#chips button").forEach(b => b.addEventListener("click", () => { input.value = b.textContent; form.requestSubmit(); }));
+</script>
+</body>
+</html>
