@@ -9,6 +9,17 @@
 
 🔗 **Live site:** https://latouimouhamedbassim-create.github.io/ai-web-portfolio/
 
+![Portfolio preview](assets/portfolio-full.png)
+
+### 🎬 Interactive demos (included in this site)
+
+| Demo | Link |
+|------|------|
+| 💬 AI chatbot (simulated replies, no API) | https://latouimouhamedbassim-create.github.io/ai-web-portfolio/demos/chatbot.html |
+| 🧠 AI agent run replay (real captured run) | https://latouimouhamedbassim-create.github.io/ai-web-portfolio/demos/agent.html |
+
+> Both demos are clearly labeled as demo mode: no AI model is called on this site.
+
 ---
 
 ## ✨ Highlights
@@ -24,9 +35,13 @@
 
 ```
 ai-web-portfolio/
-├── index.html   # page content and sections
-├── style.css    # design tokens, layout, dark/light themes
-└── script.js    # footer year + scroll animations
+├── index.html        # page content and sections
+├── style.css         # design tokens, layout, dark/light themes
+├── script.js         # footer year, scroll animations, demo links
+├── demos/
+│   ├── chatbot.html  # keyless chatbot demo
+│   └── agent.html    # agent run replay
+└── assets/           # screenshots used in this README
 ```
 
 ## 🚀 Run locally

@@ -56,3 +56,6 @@ footer { text-align: center; color: var(--muted); padding: 56px 24px 32px; font-
   .nav nav a:not(.btn) { display: none; }
   .hero { padding-top: 56px; }
 }
+
+.demo { display: inline-block; margin-top: 16px; font-weight: 600; font-size: .9rem; color: var(--accent2); cursor: pointer; }
+.demo:hover { text-decoration: underline; }

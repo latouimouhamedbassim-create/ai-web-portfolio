@@ -19,3 +19,8 @@ document.querySelectorAll(".card, .stats div").forEach((el) => {
   el.style.transition = "opacity .5s ease, transform .5s ease, border-color .2s";
   observer.observe(el);
 });
+
+// "Live demo" links sit inside card links; navigate to the demo page instead of GitHub
+document.querySelectorAll(".demo").forEach((el) => el.addEventListener("click", (e) => {
+  e.preventDefault(); e.stopPropagation(); window.location.href = el.dataset.href;
+}));
